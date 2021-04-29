@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.alertmanager.notifygateway.name }}
+  namespace: {{ .Values.alertmanager.namespace }}
+  labels:
+    app: {{ .Values.alertmanager.notifygateway.name }}
+spec:
+  type: {{ .Values.alertmanager.notifygateway.service.type }}
+  ports:
+    - port: {{ .Values.alertmanager.notifygateway.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: {{ .Values.alertmanager.notifygateway.name }}

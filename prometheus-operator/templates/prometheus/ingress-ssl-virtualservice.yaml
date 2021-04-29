@@ -1,0 +1,19 @@
+{{- if .Values.global.gateway_ssl.prometheus.create -}}
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: {{ .Values.global.gateway_ssl.prometheus.name }}
+spec:
+  hosts:
+    {{- range .Values.global.gateway_ssl.prometheus.hosts }}
+      - {{ . | quote }}
+    {{- end }}
+  gateways:
+  - {{ .Values.global.gateway_ssl.prometheus.name }}
+  http:
+  - route:
+    - destination:
+        host: {{ template "prometheus-operator.fullname" . }}-prometheus
+        port:
+          number: 9090
+{{- end }}

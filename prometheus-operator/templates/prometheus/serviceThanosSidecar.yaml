@@ -1,0 +1,30 @@
+{{- if and .Values.prometheus.enabled .Values.prometheus.thanosService.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "prometheus-operator.fullname" . }}-thanos-discovery
+  namespace: {{ template "prometheus-operator.namespace" . }}
+  labels:
+    app: {{ template "prometheus-operator.name" . }}-thanos-discovery
+{{ include "prometheus-operator.labels" . | indent 4 }}
+{{- if .Values.prometheus.thanosService.labels }}
+{{ toYaml .Values.prometheus.thanosService.labels | indent 4 }}
+{{- end }}
+{{- if .Values.prometheus.thanosService.annotations }}
+  annotations:
+{{ toYaml .Values.prometheus.thanosService.annotations | indent 4 }}
+{{- end }}
+spec:
+  type: {{ .Values.prometheus.thanosService.type }}
+  clusterIP: {{ .Values.prometheus.thanosService.clusterIP }}
+  ports:
+  - name: {{ .Values.prometheus.thanosService.portName }}
+    port: {{ .Values.prometheus.thanosService.port }}
+    targetPort: {{ .Values.prometheus.thanosService.targetPort }}
+    {{- if eq .Values.prometheus.thanosService.type "NodePort" }}
+    nodePort: {{ .Values.prometheus.thanosService.nodePort }}
+    {{- end }}
+  selector:
+    app: prometheus
+    prometheus: {{ template "prometheus-operator.fullname" . }}-prometheus
+{{- end }}

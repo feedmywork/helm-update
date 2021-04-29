@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.alertmanager.notifygateway.name }}
+  namespace: {{ .Values.alertmanager.namespace }}
+  labels:
+    app: {{ .Values.alertmanager.notifygateway.name }}
+spec:
+  replicas: {{ .Values.alertmanager.notifygateway.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.alertmanager.notifygateway.name }}
+  template:
+    metadata:
+    {{- if .Values.alertmanager.notifygateway.podAnnotations }}
+      annotations:
+        {{ toYaml .Values.alertmanager.notifygateway.podAnnotations | indent 8 }}
+    {{- end }}
+      labels:
+        app: {{ .Values.alertmanager.notifygateway.name }}
+    spec:
+      serviceAccountName: {{ template "prometheus-operator.alertmanager.serviceAccountName" . }}
+      containers:
+        - name: {{ .Values.alertmanager.notifygateway.name }}
+          image: "{{ .Values.alertmanager.notifygateway.image.repository }}:{{ .Values.alertmanager.notifygateway.image.tag }}"
+          imagePullPolicy: "{{ .Values.alertmanager.notifygateway.image.pullPolicy }}"
+          ports:
+            - name: http
+              containerPort: {{ .Values.alertmanager.notifygateway.containerPort }}
+              protocol: TCP
+          readinessProbe:
+{{ toYaml .Values.alertmanager.notifygateway.readinessProbe | indent 12 }}
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.alertmanager.notifygateway.containerPort }}
+          resources:
+            {{- toYaml .Values.alertmanager.notifygateway.resources | nindent 12 }}
+          env:
+          {{- range $key, $value := .Values.alertmanager.notifygateway.env }}
+          - name: "{{ $key }}"
+            value: "{{ $value }}"
+          {{- end }}
+    {{- if .Values.alertmanager.notifygateway.imagePullSecrets }}
+      imagePullSecrets:
+      - name: {{ .Values.alertmanager.notifygateway.imagePullSecrets.name }}
+    {{- end }}
+      {{- with .Values.alertmanager.notifygateway.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.alertmanager.notifygateway.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.alertmanager.notifygateway.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

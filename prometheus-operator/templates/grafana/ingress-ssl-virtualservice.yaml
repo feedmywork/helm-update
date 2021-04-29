@@ -1,0 +1,20 @@
+{{- if .Values.global.gateway_ssl.grafana.create -}}
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: {{ .Values.global.gateway_ssl.grafana.name }}
+  namespace: {{ .Values.grafana.namespaceOverride }}
+spec:
+  hosts:
+    {{- range .Values.global.gateway_ssl.grafana.hosts }}
+      - {{ . | quote }}
+    {{- end }}
+  gateways:
+  - {{ .Values.global.gateway_ssl.grafana.name }}
+  http:
+  - route:
+    - destination:
+        host: {{ .Values.grafana.fullnameOverride }}
+        port:
+           number: 80
+{{- end }}

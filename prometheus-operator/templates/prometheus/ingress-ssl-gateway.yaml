@@ -1,0 +1,25 @@
+{{- if .Values.global.gateway_ssl.prometheus.create -}}
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: {{ .Values.global.gateway_ssl.prometheus.name }}
+spec:
+  selector:
+    gateway: {{ .Values.global.gateway_ssl.prometheus.via }}
+  servers:
+    - hosts:
+     {{- range .Values.global.gateway_ssl.prometheus.hosts }}
+       - {{ . | quote }}
+     {{- end }}
+      port:
+        name: https
+        number: 443
+        protocol: HTTPS
+      tls:
+        credentialName: {{ .Values.global.gateway_ssl.prometheus.credentialName }}
+        {{ if .Values.global.gateway_ssl.chainCertificate }}
+        mode: MUTUAL
+        {{ else }}
+        mode: SIMPLE
+        {{ end }}
+{{- end }}

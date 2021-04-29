@@ -1,0 +1,26 @@
+{{- if .Values.global.gateway_ssl.grafana.create -}}
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: {{ .Values.global.gateway_ssl.grafana.name }}
+  namespace: {{ .Values.grafana.namespaceOverride }}
+spec:
+  selector:
+    gateway: {{ .Values.global.gateway_ssl.grafana.via }}
+  servers:
+    - hosts:
+     {{- range .Values.global.gateway_ssl.grafana.hosts }}
+       - {{ . | quote }}
+     {{- end }}
+      port:
+        name: https
+        number: 443
+        protocol: HTTPS
+      tls:
+        credentialName: {{ .Values.global.gateway_ssl.grafana.credentialName }}
+        {{ if .Values.global.gateway_ssl.chainCertificate }}
+        mode: MUTUAL
+        {{ else }}
+        mode: SIMPLE
+        {{ end }}
+{{- end }}
