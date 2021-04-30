@@ -37,8 +37,13 @@ spec:
             {{- toYaml .Values.alertmanager.notifygateway.resources | nindent 12 }}
           env:
           {{- range $key, $value := .Values.alertmanager.notifygateway.env }}
+          {{- if or (eq $key "LINE_PROPERTY") (eq $key "SOCKET_PROPERTY") }}
+          - name: "{{ $key }}"
+            value: {{ $value }}
+          {{- else }}
           - name: "{{ $key }}"
             value: "{{ $value }}"
+          {{- end }}
           {{- end }}
     {{- if .Values.alertmanager.notifygateway.imagePullSecrets }}
       imagePullSecrets:
