@@ -191,16 +191,16 @@ alertmanager:
       EMAIL_AUTH_SECURE: 'true'
       EMAIL_AUTH_USER: 'cauldronC62@gmail.com'
       EMAIL_AUTH_PASS: 'cauldronC62smtp'
-      # NOTIFY_TARGET: Line1|Socket1
-      # LINE_PROPERTY: >
-      #   '[ 
+      #NOTIFY_TARGET: Line1
+      #LINE_PROPERTY: >
+      #  '[ 
       #     { 
-      #       "name":"Line1",
-      #       "token":"#",
-      #       "endpoint":"https://notify-api.line.me/api/notify",
-      #       "timeout":10000
-      #     }
-      #   ]'
+      #      "name":"Line1",
+      #      "token":"m4PUF0g4NkghtruxYvgA4uyBN0BQLdHkIi0SORJ3qaY",
+      #      "endpoint":"https://notify-api.line.me/api/notify",
+      #      "timeout":10000
+      #    }
+      #  ]'
       # SOCKET_PROPERTY: >
       #   '[ 
       #     { 
