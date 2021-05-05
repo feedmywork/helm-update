@@ -20,7 +20,7 @@ data:
 {{- if .Values.grafana.sidecar.datasources.defaultDatasourceEnabled }}
     - name: Prometheus
       type: prometheus
-      url: http://{{ template "prometheus-operator.fullname" . }}-prometheus:{{ .Values.prometheus.service.port }}/{{ trimPrefix "/" .Values.prometheus.prometheusSpec.routePrefix }}
+      url: http://{{ template "prometheus-operator.fullname" . }}-prometheus.{{ .Release.Namespace }}:{{ .Values.prometheus.service.port }}/{{ trimPrefix "/" .Values.prometheus.prometheusSpec.routePrefix }}
       access: proxy
       isDefault: true
       jsonData:
@@ -29,7 +29,7 @@ data:
 {{- range until (int .Values.prometheus.prometheusSpec.replicas) }}
     - name: Prometheus-{{ . }}
       type: prometheus
-      url: http://prometheus-{{ template "prometheus-operator.fullname" $ }}-prometheus-{{ . }}.prometheus-operated:9090/{{ trimPrefix "/" $.Values.prometheus.prometheusSpec.routePrefix }}
+      url: http://prometheus-{{ template "prometheus-operator.fullname" $ }}-prometheus-{{ . }}.prometheus-operated.{{ .Release.Namespace }}:9090/{{ trimPrefix "/" $.Values.prometheus.prometheusSpec.routePrefix }}
       access: proxy
       isDefault: false
       jsonData:
