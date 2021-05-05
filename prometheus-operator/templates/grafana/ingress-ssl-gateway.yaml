@@ -1,5 +1,5 @@
 {{- if .Values.global.gateway_ssl.grafana.create -}}
-apiVersion: networking.istio.io/v1beta1
+apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
   name: {{ .Values.global.gateway_ssl.grafana.name }}

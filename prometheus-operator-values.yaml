@@ -113,26 +113,26 @@ global:
     ## True for Support for Chain-CA-Certificate File
     chainCertificate: false
     prometheus:
-      create: false
+      create: true
       name: c60-prometheus
       via: c03-ingressgateway
       hosts:
         - c60.cauldron.com
-      credentialName: c60-prometheus-credential
+      credentialName: c60-prometheus-credential-self
     alertmanager:
-      create: false
+      create: true
       name: c62-alertmanager
       via: c03-ingressgateway
       hosts:
         - c62.cauldron.com
-      credentialName: c62-alertmanager-credential
+      credentialName: c62-alertmanager-credential-self
     grafana:
-      create: false
+      create: true
       name: c63-grafana
       via: c03-ingressgateway
       hosts:
         - c63.cauldron.com
-      credentialName: c63-grafana-credential
+      credentialName: c63-grafana-credential-self
 
 ## Configuration for alertmanager
 ## ref: https://prometheus.io/docs/alerting/alertmanager/
@@ -158,8 +158,8 @@ alertmanager:
     name: "notifygateway"
     replicaCount: 1
     image:
-      repository: 119.31.112.179:58088/cauldron/cauldron-c62-notifygateway 
-      tag: 1.6.0
+      repository: lib.matador.ais.co.th/cauldron/cauldron-c62-notifygateway
+      tag: 1.7.0
       pullPolicy: IfNotPresent
       
     containerPort: 3000
@@ -541,7 +541,7 @@ alertmanager:
     ## Image of Alertmanager
     ##
     image:
-      repository: quay.io/prometheus/alertmanager
+      repository: lib.matador.ais.co.th/prometheus/alertmanager
       tag: v0.21.0
       sha: ""
 
@@ -760,10 +760,10 @@ grafana:
   namespaceOverride: cauldron-c63
   fullnameOverride: c63-grafana
   image:
-  repository: grafana/grafana
-  tag: 7.5.3
-  sha: ""
-  pullPolicy: IfNotPresent
+   repository: lib.matador.ais.co.th/grafana/grafana
+   tag: 7.5.3
+   sha: ""
+   pullPolicy: IfNotPresent
 
   ## Deploy default dashboards.
   ##
@@ -829,7 +829,7 @@ grafana:
     ## initChownData container image
     ##
     image:
-      repository: busybox
+      repository: lib.matador.ais.co.th/busybox
       tag: "1.31.1"
       pullPolicy: IfNotPresent
 
@@ -1566,7 +1566,7 @@ prometheusOperator:
     patch:
       enabled: true
       image:
-        repository: jettech/kube-webhook-certgen
+        repository: lib.matador.ais.co.th/jettech/kube-webhook-certgen
         tag: v1.5.0
         sha: ""
         pullPolicy: IfNotPresent
@@ -1764,7 +1764,7 @@ prometheusOperator:
   ## Prometheus-operator image
   ##
   image:
-    repository: quay.io/prometheus-operator/prometheus-operator
+    repository: lib.matador.ais.co.th/prometheus-operator/prometheus-operator
     tag: v0.47.0
     sha: ""
     pullPolicy: IfNotPresent
@@ -1780,7 +1780,7 @@ prometheusOperator:
   ## Prometheus-config-reloader image to use for config and rule reloading
   ##
   prometheusConfigReloaderImage:
-    repository: quay.io/prometheus-operator/prometheus-config-reloader
+    repository: lib.matador.ais.co.th/prometheus-operator/prometheus-config-reloader
     tag: v0.47.0
     sha: ""
 
@@ -2105,7 +2105,7 @@ prometheus:
     ## Image of Prometheus.
     ##
     image:
-      repository: quay.io/prometheus/prometheus
+      repository: lib.matador.ais.co.th/prometheus/prometheus
       tag: v2.25.0
       sha: ""
 
