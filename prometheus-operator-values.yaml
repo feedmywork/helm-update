@@ -1286,8 +1286,8 @@ kubeEtcd:
     enabled: true
     port: 2379
     targetPort: 2379
-    # selector:
-    #   component: etcd
+    selector:
+      component: etcd
 
   ## Configure secure access to the etcd cluster by loading a secret into prometheus and
   ## specifying security configuration below. For example, with a secret named etcd-client-cert
@@ -2420,7 +2420,11 @@ prometheus:
     ## The scrape configuration example below will find master nodes, provided they have the name .*mst.*, relabel the
     ## port to 2379 and allow etcd scraping provided it is running on all Kubernetes master nodes
     ##
-    additionalScrapeConfigs: []
+    additionalScrapeConfigs:
+    - job_name: istio-mesh
+      scrape_interval: 5s
+      static_configs:
+      - targets: ['istio-telemetry.istio-system:42422','istio-telemetry.istio-system:15014','istio-pilot.istio-system:15014','istio-galley.istio-system:15014','istio-policy.istio-system:15014','istio-citadel.istio-system:15014']
     # - job_name: kube-etcd
     #   kubernetes_sd_configs:
     #     - role: node
@@ -2568,7 +2572,16 @@ prometheus:
   #      - nodes/proxy
   #    verbs: [ "get", "list", "watch" ]
 
-  additionalServiceMonitors: []
+  additionalServiceMonitors: 
+  - name: "cauldron-c20"
+    selector:
+      app.kubernetes.io/component: cauldron-c20
+    namespaceSelector:
+      any: true
+    endpoints:
+    - port: http-cauldron
+      path: /metrics
+      scheme: http
   ## Name of the ServiceMonitor to create
   ##
   # - name: ""
@@ -2699,3 +2712,63 @@ prometheus:
     ## https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#podmetricsendpoint
     ##
     # podMetricsEndpoints: []
+    
+cauldronC10:
+  enabled: false
+
+  ## If your API endpoint address is not reachable (as in AKS) you can replace it with the kubernetes service
+  ##
+  relabelings: []
+  # - sourceLabels:
+  #     - __meta_kubernetes_namespace
+  #     - __meta_kubernetes_service_name
+  #     - __meta_kubernetes_endpoint_port_name
+  #   action: keep
+  #   regex: default;kubernetes;https
+  # - targetLabel: __address__
+  #   replacement: kubernetes.default.svc:443
+
+  serviceMonitor:
+    namespace: cauldron-c10
+    endpoints:
+    - port: exporter
+      path: /metrics
+      scheme: http
+
+    ## Scrape interval. If not set, the Prometheus default scrape interval is used.
+    ##
+    jobLabel: c10-rabbitmq-ha
+    selector:
+      matchLabels:
+        app: rabbitmq-ha
+
+    ## metric relabel configs to apply to samples before ingestion.
+    ##
+    metricRelabelings: []
+    # - action: keep
+    #   regex: 'kube_(daemonset|deployment|pod|namespace|node|statefulset).+'
+    #   sourceLabels: [__name__]
+
+fluentbit:
+  enabled: false
+
+  serviceMonitor:
+    namespace: cauldron-c61
+    endpoints:
+    - port: metrics
+      path: /api/v1/metrics/prometheus
+      scheme: http
+
+    ## Scrape interval. If not set, the Prometheus default scrape interval is used.
+    ##
+    jobLabel: fluent-bit
+    selector:
+      matchLabels:
+        app: fluent-bit
+
+    ## metric relabel configs to apply to samples before ingestion.
+    ##
+    metricRelabelings: []
+    # - action: keep
+    #   regex: 'kube_(daemonset|deployment|pod|namespace|node|statefulset).+'
+    #   sourceLabels: [__name__]
