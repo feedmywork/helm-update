@@ -2577,8 +2577,7 @@ prometheus:
   additionalServiceMonitors: 
   - name: "cauldron-c20"
     selector:
-      labels:
-        app.kubernetes.io/component: cauldron-c20
+      component: cauldron-c20
     namespaceSelector:
       any: true
     endpoints:
