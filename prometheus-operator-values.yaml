@@ -53,6 +53,8 @@ defaultRules:
     prometheus: true
     prometheusOperator: true
     time: true
+    cauldronC10: false
+    fluentbit: false
 
   ## Runbook url prefix for default rules
   runbookUrl: https://github.com/kubernetes-monitoring/kubernetes-mixin/tree/master/runbook.md#
@@ -2712,7 +2714,7 @@ prometheus:
     ## https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#podmetricsendpoint
     ##
     # podMetricsEndpoints: []
-    
+
 cauldronC10:
   enabled: false
 
