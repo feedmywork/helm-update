@@ -1,0 +1,27 @@
+{{- if .Values.cauldronC10.enabled }}
+apiVersion: {{ printf "%s/v1" (.Values.prometheusOperator.crdApiGroup | default "monitoring.coreos.com") }}
+kind: ServiceMonitor
+metadata:
+  name: {{ .Values.cauldronC10.serviceMonitor.jobLabel }}
+  namespace: {{ .Values.cauldronC10.serviceMonitor.namespace }}
+  labels:
+    app: {{ template "prometheus-operator.name" . }}-{{ .Values.cauldronC10.serviceMonitor.jobLabel }}
+{{ include "prometheus-operator.labels" . | indent 4 }}
+spec:
+  endpoints:
+{{ toYaml .Values.cauldronC10.serviceMonitor.endpoints | indent 4 }}
+{{- if .Values.cauldronC10.serviceMonitor.metricRelabelings }}
+    metricRelabelings:
+{{ tpl (toYaml .Values.cauldronC10.serviceMonitor.metricRelabelings | indent 6) . }}
+{{- end }}
+{{- if .Values.cauldronC10.relabelings }}
+    relabelings:
+{{ toYaml .Values.cauldronC10.relabelings | indent 6 }}
+{{- end }}
+  jobLabel: {{ .Values.cauldronC10.serviceMonitor.jobLabel }}
+  namespaceSelector:
+    matchNames:
+    - {{ .Values.cauldronC10.serviceMonitor.namespace }}
+  selector:
+{{ toYaml .Values.cauldronC10.serviceMonitor.selector | indent 4 }}
+{{- end}}
