@@ -115,26 +115,26 @@ global:
     ## True for Support for Chain-CA-Certificate File
     chainCertificate: false
     prometheus:
-      create: true
+      create: false
       name: c60-prometheus
       via: c03-ingressgateway
       hosts:
         - c60.cauldron.com
-      credentialName: c60-prometheus-credential-self
+      credentialName: c60-prometheus-credential
     alertmanager:
-      create: true
+      create: false
       name: c62-alertmanager
       via: c03-ingressgateway
       hosts:
         - c62.cauldron.com
-      credentialName: c62-alertmanager-credential-self
+      credentialName: c62-alertmanager-credential
     grafana:
-      create: true
+      create: false
       name: c63-grafana
       via: c03-ingressgateway
       hosts:
         - c63.cauldron.com
-      credentialName: c63-grafana-credential-self
+      credentialName: c63-grafana-credential
 
 ## Configuration for alertmanager
 ## ref: https://prometheus.io/docs/alerting/alertmanager/
